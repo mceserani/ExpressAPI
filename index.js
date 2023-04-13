@@ -50,13 +50,15 @@ app.post('/:name/:surname/:matr', (req, res) => {
 app.delete('/:matr', (req, res) => {
     db.get('SELECT matr FROM user WHERE matr = ?', [req.params.matr], (err, row) => {
         if (err) {
+            res.send('Database error');
             return console.error(err.message);
         }
         if (!row) {
             res.send(`A user with matr ${req.params.matr} does not exist`);
         } else {
-            db.run('DELETE FROM user WHERE matr = ?', [req.params.matr], function(err) {
+            db.run('DELETE FROM user WHERE matr = ?', [req.params.matr], (err) => {
                 if (err) {
+                    res.send('Database error');
                     return console.error(err.message);
                 }
                 res.send(`User with matr ${req.params.matr} deleted from database`);
@@ -64,7 +66,6 @@ app.delete('/:matr', (req, res) => {
         }
     });
 });
-
 
 // Listen on port 3000
 app.listen(3000, () => {
